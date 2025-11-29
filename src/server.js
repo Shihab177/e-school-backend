@@ -14,6 +14,27 @@ mongoose
   .catch((err) => console.log("MongoDB connection error:", err));
 
 
+
+app.post("/user", async (req, res) => {
+  try {
+    const user = req.body;
+    user.role = "user";
+    user.status = "active";
+    console.log(user);
+    const result = await User.create(user);
+    res.status(201).send({
+      success: true,
+      message: "User created successfully",
+      data: result,
+    });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "Server Error", message: err.message });
+  }
+});
+
+
+
 app.get("/", (req, res) => {
   res.send("Hello from Express + MongoDB!");
 });
