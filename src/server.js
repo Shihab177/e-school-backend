@@ -33,7 +33,30 @@ app.post("/user", async (req, res) => {
   }
 });
 
-
+app.post("/signin", async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    const user = await User.findOne({ email });
+    if (!user) {
+      return res
+        .status(401)
+        .json({ success: false, message: "Invalid email or password" });
+    }
+    if (user.password !== password) {
+      return res
+        .status(401)
+        .json({ success: false, message: "Invalid email or password" });
+    }
+    res.status(200).send({
+      success: true,
+      message: "Login successful",
+      result: user,
+    });
+  } catch (err) {
+    console.error("Login error:", err);
+    res.status(500).json({ success: false, message: "Server error" });
+  }
+});
 
 app.get("/", (req, res) => {
   res.send("Hello from Express + MongoDB!");
